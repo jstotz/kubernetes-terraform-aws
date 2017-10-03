@@ -1,0 +1,14 @@
+# Used as a prefix or name for various AWS resources:
+name = "my-k8s"
+
+# This assumes you have already created or imported an AWS Key Pair with the
+# same name as you used for the "name" variable above.
+#
+# Copy the public key file contents and paste here.
+public_key = "..."
+
+# The role you want to assume to perform AWS operations:
+aws_role = "arn:aws:iam::<account>:role/<role-name>"
+
+# The AWS region. Defaults to "us-east-1":
+# aws_region = "us-east-1"
