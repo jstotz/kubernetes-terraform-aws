@@ -57,10 +57,17 @@ resource "aws_route_table_association" "a" {
   route_table_id = "${aws_route_table.main.id}"
 }
 
-resource "aws_route" "r" {
+resource "aws_route" "internet" {
   route_table_id         = "${aws_route_table.main.id}"
-  gateway_id             = "${aws_internet_gateway.main.id}"
   destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = "${aws_internet_gateway.main.id}"
+}
+
+resource "aws_route" "pod_subnet_routes" {
+  count                  = 3
+  route_table_id         = "${aws_route_table.main.id}"
+  destination_cidr_block = "10.200.${count.index}.0/24"
+  instance_id            = "${element(aws_instance.workers.*.id, count.index)}"
 }
 
 resource "aws_security_group" "main" {
@@ -205,8 +212,9 @@ resource "aws_instance" "workers" {
   source_dest_check           = false
 
   tags {
-    Name    = "${var.name}-worker-${count.index}"
-    Cluster = "${var.name}"
-    Role    = "k8s-worker"
+    Name      = "${var.name}-worker-${count.index}"
+    Cluster   = "${var.name}"
+    Role      = "k8s-worker"
+    PodSubnet = "10.200.${count.index}.0/24"
   }
 }
