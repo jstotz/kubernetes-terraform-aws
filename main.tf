@@ -184,7 +184,9 @@ resource "aws_instance" "controllers" {
   source_dest_check           = false
 
   tags {
-    Name = "${var.name}-controller-${count.index}"
+    Name    = "${var.name}-controller-${count.index}"
+    Cluster = "${var.name}"
+    Role    = "k8s-controller"
   }
 }
 
@@ -201,6 +203,8 @@ resource "aws_instance" "workers" {
   source_dest_check           = false
 
   tags {
-    Name = "${var.name}-worker-${count.index}"
+    Name    = "${var.name}-worker-${count.index}"
+    Cluster = "${var.name}"
+    Role    = "k8s-worker"
   }
 }
