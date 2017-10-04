@@ -129,6 +129,8 @@ resource "aws_elb" "k8s" {
     instance_protocol = "tcp"
     instance_port     = 6443
   }
+
+  instances = ["${aws_instance.controllers.*.id}"]
 }
 
 resource "aws_key_pair" "main" {
